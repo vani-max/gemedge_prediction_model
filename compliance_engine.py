@@ -1,14 +1,4 @@
-"""
-compliance_engine.py
-
-Component B of the GemEdge engine.
-Responsibility: Parse a tender PDF, extract requirements using LLM,
-validate the output, then check vendor profiles deterministically.
-
-Key design principle: LLM only touches unstructured text parsing.
-All compliance decisions are made by pure Python logic.
-"""
-
+# Component B
 import json
 import logging
 import re
@@ -31,17 +21,10 @@ logger = logging.getLogger(__name__)
 
 
 # SECTION 1: PDF TEXT EXTRACTION
-# Why: PDFs are binary files. pdfplumber converts them to readable text.
-# Government PDFs are messy — mixed Hindi/English, tables, weird spacing.
-# We extract everything and let the LLM deal with the mess.
 
 def extract_tender_text(pdf_path: str) -> str:
     """
     Reads a PDF page by page and returns all text as one string.
-    
-    Why pdfplumber over PyPDF2?
-    pdfplumber handles tables and complex layouts better.
-    PyPDF2 often garbles text from government PDFs with mixed fonts.
     """
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF not found at: {pdf_path}")
@@ -67,10 +50,6 @@ def extract_tender_text(pdf_path: str) -> str:
 
 
 # SECTION 2: PYDANTIC SCHEMA
-# Why: We need a strict contract defining exactly what data we expect from LLM.
-# Pydantic will automatically raise errors if the LLM returns wrong types.
-# This is the first line of defense against hallucinations.
-
 
 class TenderRequirements(BaseModel):
     """
@@ -132,9 +111,6 @@ class TenderRequirements(BaseModel):
 
 
 # SECTION 3: LLM EXTRACTION
-# Why: Tender PDFs are unstructured. The LLM reads natural language and
-# converts it to the structured JSON our Pydantic schema expects.
-# Temperature=0 means deterministic output — less creative, less hallucination.
 
 def extract_requirements_with_llm(tender_text: str) -> str:
     """
@@ -146,7 +122,6 @@ def extract_requirements_with_llm(tender_text: str) -> str:
     """
     client = Groq()  # automatically reads GROQ_API_KEY from environment
     
-    # We truncate to 8000 chars to stay within token limits
     # Government PDFs are long but the eligibility info is usually in first few pages
     truncated_text = tender_text[:8000]
     
@@ -200,13 +175,6 @@ TENDER DOCUMENT:
 
 
 # SECTION 4: THE HARDENING LAYER
-# This is the most important part. LLMs fail in predictable ways:
-# 1. They add markdown (```json ... ```) around the JSON
-# 2. They add explanation text before/after the JSON
-# 3. They hallucinate values that fail Pydantic validation
-# 4. They return completely garbled output
-# We handle all four cases gracefully.
-
 
 def parse_and_validate_llm_output(
     raw_output: str,
@@ -280,12 +248,7 @@ def parse_and_validate_llm_output(
         emd_required=False
     )
 
-
-
 # SECTION 5: DETERMINISTIC COMPLIANCE CHECK
-# Pure Python. Zero AI. Every decision is traceable.
-# If this function returns FAIL, you can point to exactly which rule failed.
-
 
 def check_vendor_compliance(vendor: dict, requirements: TenderRequirements) -> dict:
     """
@@ -394,7 +357,6 @@ def check_vendor_compliance(vendor: dict, requirements: TenderRequirements) -> d
 # SECTION 6: MASTER PIPELINE FUNCTION
 # Ties everything together. Takes a PDF path + vendor list, returns full matrix.
 
-
 def run_compliance_pipeline(pdf_path: str, vendor_profiles_path: str) -> dict:
     """
     End-to-end compliance check for all vendors against one tender.
@@ -441,7 +403,7 @@ if __name__ == "__main__":
             pdf_path=f"data/raw_tenders/{pdf_name}",
             vendor_profiles_path="data/vendor_profiles.json"
         )
-        print(f"\n========== COMPLIANCE MATRIX ==========")
+        print(f"\n- COMPLIANCE MATRIX -")
         print(f"\nTender: {result['tender_requirements']['bid_number']}")
         print(f"Category: {result['tender_requirements']['item_category']}")
         print(f"MSE Preference: {result['tender_requirements']['mse_purchase_preference']}")

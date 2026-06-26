@@ -1,19 +1,4 @@
-"""
-pricing_model.py
-
-Component C of the GemEdge engine.
-Responsibility: Given historical contract award data, predict the likely
-L1 (lowest winning) price for an active tender.
-
-Two-layer approach:
-1. Data sanitization — remove outliers before any calculation
-2. Prediction — statistical baseline + ML refinement if enough data
-
-Key design principle: prediction is always accompanied by a confidence
-interval and a clear count of how many data points were used.
-This makes the output auditable and honest.
-"""
-
+# Component C
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -55,7 +40,6 @@ def load_historical_data(csv_path: str) -> pd.DataFrame:
     if dropped > 0:
         logger.warning(f"Dropped {dropped} rows with missing l1_price")
     
-    # Ensure numeric columns are actually numeric
     # pd.to_numeric with errors='coerce' turns bad values into NaN
     # instead of crashing — safer for real-world messy data
     df['l1_price'] = pd.to_numeric(df['l1_price'], errors='coerce')
@@ -69,36 +53,11 @@ def load_historical_data(csv_path: str) -> pd.DataFrame:
     return df
 
 
-# SECTION 2: OUTLIER REMOVAL — THE GUARDRAIL
-# This is the most important part of Component C.
-#
-# Why do outliers exist in GeM data?
-# - Predatory pricing: a vendor quotes ₹1 to win, planning to renegotiate
-# - Data entry errors: someone typed 4500000 instead of 45000
-# - Completely different product specs under same category name
-# - Emergency procurement at non-market rates
-#
-# Why IQR and not standard deviation?
-# Standard deviation assumes a normal distribution.
-# Procurement prices are often right-skewed (a few very expensive outliers).
-# IQR is distribution-agnostic — it just looks at the middle 50% spread.
+# SECTION 2: OUTLIER REMOVAL
 
 def remove_outliers_iqr(df: pd.DataFrame, column: str) -> pd.DataFrame:
-    """
-    Removes statistical outliers using the IQR (Interquartile Range) method.
-    
-    How IQR works:
-    - Sort all prices
-    - Q1 = value at 25th percentile (bottom quarter boundary)
-    - Q3 = value at 75th percentile (top quarter boundary)  
-    - IQR = Q3 - Q1 (the spread of the middle 50%)
-    - Lower fence = Q1 - 1.5 * IQR
-    - Upper fence = Q3 + 1.5 * IQR
-    - Anything outside the fences = outlier, removed
-    
-    The 1.5 multiplier is Tukey's standard — used in every box plot.
-    It keeps ~99.3% of normally distributed data while catching true outliers.
-    """
+
+    # Removes statistical outliers using the IQR (Interquartile Range) method.
     Q1 = df[column].quantile(0.25)
     Q3 = df[column].quantile(0.75)
     IQR = Q3 - Q1
@@ -125,18 +84,11 @@ def remove_outliers_iqr(df: pd.DataFrame, column: str) -> pd.DataFrame:
 
 # SECTION 3: STATISTICAL PREDICTION
 # Always computed — this is your fallback if ML can't run.
-# Median is used instead of mean because it's resistant to remaining skew.
-# Even after IQR removal, distributions can be asymmetric.
 
 def statistical_prediction(clean_df: pd.DataFrame) -> dict:
     """
     Pure statistics — no ML, no model.
     Median, mean, std, and a confidence interval.
-    
-    Why median over mean for the primary estimate?
-    If 9 bids come in at ₹45,000 and one at ₹38,000 (aggressive bidder),
-    mean pulls down toward ₹44,300 but median stays at ₹45,000.
-    The median better represents what a "typical" winning price looks like.
     """
     prices = clean_df['l1_price']
     
@@ -147,7 +99,6 @@ def statistical_prediction(clean_df: pd.DataFrame) -> dict:
     max_price = prices.max()
     
     # 90% confidence interval using 1.645 standard deviations
-    # (assumes approximately normal distribution after outlier removal)
     margin = 1.645 * (std_price / np.sqrt(len(prices)))
     ci_lower = mean_price - margin
     ci_upper = mean_price + margin
@@ -169,30 +120,15 @@ def statistical_prediction(clean_df: pd.DataFrame) -> dict:
 
 # SECTION 4: ML PREDICTION
 # Linear Regression with two features: num_bidders and recency.
-#
-# Why these two features?
-# - num_bidders: more competition drives price down (economic theory)
-#   your historical data should show this correlation
-# - recency (days_ago): prices change over time due to inflation,
-#   component costs, market conditions — recent data is more relevant
-#
-# Why Linear Regression over something fancier?
-# With 25 data points, complex models overfit badly.
-# Linear Regression is interpretable — you can explain every coefficient.
-# In the live interview they WILL ask "why not Random Forest?" and
-# "coefficients show that each additional bidder reduces price by ₹X"
-# is a much stronger answer than a black-box model.
 
 def ml_prediction(clean_df: pd.DataFrame, target_specs: dict) -> dict:
     """
     Linear Regression to predict L1 price for a new tender.
-    
     Features:
     - num_bidders: expected number of competing bids
     - days_ago: how many days ago was this historical contract (recency weight)
     
     StandardScaler normalizes features so coefficients are comparable.
-    Without scaling, days_ago (large numbers) would dominate num_bidders (small).
     """
     df = clean_df.copy()
     
@@ -271,15 +207,13 @@ def ml_prediction(clean_df: pd.DataFrame, target_specs: dict) -> dict:
 def predict_l1_price(csv_path: str, target_specs: dict) -> dict:
     """
     Full prediction pipeline for a target tender.
-    
     target_specs should contain:
     - category: str (to filter historical data by category)
     - expected_bidders: int (how many competitors expected)
-    
     Returns a unified dict with both statistical and ML predictions,
     plus a final recommended estimate.
     """
-    logger.info("=== Starting L1 Price Prediction Pipeline ===")
+    logger.info("-Starting L1 Price Prediction Pipeline-")
     logger.info(f"Target specs: {target_specs}")
     
     # Step 1: Load all data
@@ -361,7 +295,7 @@ if __name__ == "__main__":
         }
     )
     
-    print("\n========== L1 PRICE PREDICTION ==========")
+    print("\n -L1 PRICE PREDICTION -")
     print(f"\nCategory: {result['target_specs']['category']}")
     print(f"Data points used: {result['data_points_used']}")
     print(f"\nStatistical Prediction:")
