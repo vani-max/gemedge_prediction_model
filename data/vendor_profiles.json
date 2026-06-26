@@ -1,0 +1,32 @@
+[
+  {
+    "vendor_id": "V001",
+    "name": "TechSupply India Pvt Ltd",
+    "annual_turnover_lakhs": 100,
+    "is_msme": true,
+    "msme_type": "MSE",
+    "years_in_business": 5,
+    "certifications": ["ISO9001", "GeM_registered", "Udyam_registered", "OEM_Authorization"],
+    "past_gem_orders": 12
+  },
+  {
+    "vendor_id": "V002",
+    "name": "GlobalTech Solutions",
+    "annual_turnover_lakhs": 30,
+    "is_msme": false,
+    "msme_type": null,
+    "years_in_business": 2,
+    "certifications": ["GeM_registered"],
+    "past_gem_orders": 3
+  },
+  {
+    "vendor_id": "V003",
+    "name": "BharatMake Electronics",
+    "annual_turnover_lakhs": 250,
+    "is_msme": true,
+    "msme_type": "MII",
+    "years_in_business": 8,
+    "certifications": ["ISO9001", "Make_in_India", "GeM_registered"],
+    "past_gem_orders": 34
+  }
+]

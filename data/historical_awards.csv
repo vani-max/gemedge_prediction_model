@@ -1,0 +1,26 @@
+﻿contract_id,product_name,category,l1_price,num_bidders,award_date,buyer_type,quantity,seller_msme
+GEM/2025/C/4521001,Entry Level Laptop i5,Laptop,47500,8,15/03/25,Central Govt,50,FALSE
+GEM/2025/C/4521002,Entry Level Laptop i5,Laptop,44200,11,02/04/25,State Govt,20,TRUE
+GEM/2025/C/4521003,Entry Level Laptop i5,Laptop,51000,5,18/04/25,PSU,100,FALSE
+GEM/2025/C/4521004,Entry Level Laptop i3,Laptop,38500,14,01/05/25,State Govt,30,TRUE
+GEM/2025/C/4521005,Entry Level Laptop i5,Laptop,46800,9,20/05/25,Central Govt,25,FALSE
+GEM/2025/C/4521006,Entry Level Laptop i7,Laptop,68000,6,05/06/25,Ministry of Defence,10,TRUE
+GEM/2025/C/4521007,Entry Level Laptop i5,Laptop,45500,12,22/06/25,State Govt,75,FALSE
+GEM/2025/C/4521008,Entry Level Laptop i5,Laptop,49200,7,10/07/25,Central Govt,40,TRUE
+GEM/2025/C/4521009,Entry Level Laptop i3,Laptop,37800,16,28/07/25,Municipal Corp,15,FALSE
+GEM/2025/C/4521010,High End Laptop i7,Laptop,82000,4,05/08/25,IIT,8,TRUE
+GEM/2025/C/4521011,Entry Level Laptop i5,Laptop,46100,10,19/08/25,State Govt,60,FALSE
+GEM/2025/C/4521012,Entry Level Laptop i5,Laptop,48700,8,03/09/25,PSU,35,TRUE
+GEM/2025/C/4521013,Entry Level Laptop i3,Laptop,39200,13,17/09/25,State Govt,21,FALSE
+GEM/2025/C/4521014,High End Laptop i9,Laptop,125000,3,01/10/25,DRDO,5,FALSE
+GEM/2025/C/4521015,Entry Level Laptop i5,Laptop,45900,11,15/10/25,Central Govt,80,FALSE
+GEM/2025/C/4521016,Entry Level Laptop i5,Laptop,43500,15,02/11/25,State Govt,45,TRUE
+GEM/2025/C/4521017,Entry Level Laptop i7,Laptop,71000,5,18/11/25,Ministry of Finance,12,FALSE
+GEM/2025/C/4521018,Entry Level Laptop i5,Laptop,47100,9,05/12/25,Central Govt,55,FALSE
+GEM/2025/C/4521019,Entry Level Laptop i3,Laptop,36900,18,20/12/25,Municipal Corp,25,TRUE
+GEM/2025/C/4521020,Entry Level Laptop i5,Laptop,50200,6,08/01/26,PSU,90,FALSE
+GEM/2025/C/4521021,Entry Level Laptop i5,Laptop,46500,10,25/01/26,State Govt,33,TRUE
+GEM/2025/C/4521022,High End Laptop i7,Laptop,79500,5,10/02/26,NIT,7,FALSE
+GEM/2025/C/4521023,Entry Level Laptop i5,Laptop,44800,12,24/02/26,Central Govt,65,FALSE
+GEM/2025/C/4521024,Entry Level Laptop i5,Laptop,48100,8,12/03/26,State Govt,42,TRUE
+GEM/2025/C/4521025,Entry Level Laptop i3,Laptop,38100,14,28/03/26,Municipal Corp,19,TRUE
