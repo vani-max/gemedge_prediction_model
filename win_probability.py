@@ -44,27 +44,6 @@ def calculate_win_probability(
         raise ValueError("Bid price and predicted L1 must be positive")
 
     # COMPONENT 1: PRICE SCORE
-    #
-    # Core idea: how does your bid compare to the predicted L1?
-    #
-    # price_ratio = vendor_bid / predicted_l1
-    # - ratio = 0.9 means you're bidding 10% BELOW predicted L1 (aggressive)
-    # - ratio = 1.0 means you're matching predicted L1 exactly
-    # - ratio = 1.1 means you're bidding 10% ABOVE predicted L1 (risky)
-    #
-    # We use exponential decay: score = exp(-k * (ratio - 1))
-    #
-    # Why exponential and not linear?
-    # Linear would give negative scores for high ratios.
-    # Exponential naturally stays between 0 and 1.
-    # It also models real bidding behavior — the penalty for being
-    # slightly above L1 is small, but being far above L1 kills your chances.
-    #
-    # k=3.0 is the decay rate. At k=3:
-    # - ratio 1.0 (at L1): score = 1.0
-    # - ratio 1.1 (+10%):  score = 0.74
-    # - ratio 1.2 (+20%):  score = 0.55
-    # - ratio 1.5 (+50%):  score = 0.22
 
     price_ratio = vendor_bid / predicted_l1
     k = 3.0
@@ -72,37 +51,14 @@ def calculate_win_probability(
     price_score = np.exp(-k * (price_ratio - 1))
 
     # For bids below L1 (ratio < 1), exp gives values > 1.
-    # Cap at 0.95 — you can never be 100% certain of winning
-    # even with the lowest price (buyer can disqualify on technical grounds)
     price_score = min(0.95, price_score)
     price_score = max(0.0, price_score)  # floor at 0
 
     # COMPONENT 2: COMPETITION FACTOR
-    #
-    # More competitors = lower probability for any single vendor.
-    #
-    # Why sqrt instead of 1/n (linear)?
-    # With 1/n: 1 bidder=100%, 2 bidders=50%, 10 bidders=10%
-    # This is too aggressive — it assumes all vendors are identical.
-    # In reality, quality and compliance differences mean some vendors
-    # have significantly better odds than 1/n.
-    #
-    # With 1/sqrt(n): 1 bidder=100%, 4 bidders=50%, 16 bidders=25%
-    # This is a softer decay that better reflects real procurement outcomes.
 
     competition_factor = 1.0 / np.sqrt(max(1, num_competitors))
 
     # COMPONENT 3: REGULATORY BONUS
-    #
-    # GeM policy gives purchase preference to local/MSME suppliers.
-    # These are LEGAL ADVANTAGES defined in government policy:
-    #
-    # MII (Make in India) Class 1: 20% price preference
-    #   → Can bid up to L1+20% and still win up to 50% of order
-    # MSE (Micro/Small Enterprise): 15% price preference
-    #   → Can bid up to L1+15% and still win up to 25% of order
-    #
-    # We model this as a direct additive bonus to the final probability.
 
     regulatory_bonus = 0.0
     regulatory_note = "No preference applicable"
@@ -120,19 +76,8 @@ def calculate_win_probability(
 
     # FINAL COMBINATION
     # Weighted formula:
-    # - Price score carries 60% weight — price is the primary factor in L1 bidding
-    # - Competition carries 30% weight — more bidders genuinely reduces your odds
-    # - Regulatory bonus is additive — it's a real policy advantage, not just a weight
-    #
-    # Final = (0.6 * price_score + 0.3 * competition_factor) + regulatory_bonus
-    # Then clamped to [0, 1] and converted to percentage.
-    #
-    # Why additive for regulatory bonus?
-    # Because MSE/MII preference is a genuine legal entitlement that
-    # exists independently of price and competition.
-    # A weighted average would dilute it — adding it directly reflects
-    # that it's a separate policy instrument.
-
+    # - Price score carries 60% weight
+    # - Competition carries 30% weight
     raw_score = (
         0.6 * price_score +
         0.3 * competition_factor +
