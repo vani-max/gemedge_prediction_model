@@ -185,7 +185,7 @@ def run_data_pipeline_validation() -> dict:
     Master validation function — checks all data sources.
     Run this before starting the main pipeline to catch missing files early.
     """
-    logger.info("=== Running Data Pipeline Validation ===")
+    logger.info("Running Data Pipeline Validation")
 
     report = {
         "timestamp": datetime.now().isoformat(),
@@ -210,10 +210,9 @@ def run_data_pipeline_validation() -> dict:
 
     return report
 
-
 if __name__ == "__main__":
     report = run_data_pipeline_validation()
-    print("\n========== DATA PIPELINE VALIDATION ==========")
+    print("\n DATA PIPELINE VALIDATION")
     print(f"Pipeline Ready: {report['pipeline_ready']}")
     print(f"\nTender Files:")
     print(f"  Valid: {len(report['tender_files']['valid'])}")
