@@ -3,6 +3,7 @@ import json
 import logging
 import re
 import os
+import streamlit as st
 from typing import Optional
 from dotenv import load_dotenv
 import pdfplumber
@@ -120,7 +121,8 @@ def extract_requirements_with_llm(tender_text: str) -> str:
     Why return raw string instead of parsed JSON here?
     So the hardening layer can handle malformed JSON gracefully.
     """
-    client = Groq()  # automatically reads GROQ_API_KEY from environment
+    client = Groq(
+    api_key=st.secrets["GROQ_API_KEY"])  # automatically reads GROQ_API_KEY from environment
     
     # Government PDFs are long but the eligibility info is usually in first few pages
     truncated_text = tender_text[:8000]
