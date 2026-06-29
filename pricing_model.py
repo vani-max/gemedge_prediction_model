@@ -45,6 +45,9 @@ def load_historical_data(csv_path: str) -> pd.DataFrame:
     df['l1_price'] = pd.to_numeric(df['l1_price'], errors='coerce')
     df['num_bidders'] = pd.to_numeric(df['num_bidders'], errors='coerce')
     df['quantity'] = pd.to_numeric(df['quantity'], errors='coerce')
+
+    if 'contract_id' in df.columns:
+        df = df.rename(columns={'contract_id': 'gem_ref_number'})
     
     # Drop any rows that became NaN after coercion
     df = df.dropna(subset=['l1_price'])

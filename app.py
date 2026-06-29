@@ -1,9 +1,3 @@
-"""
-app.py — GemEdge Procurement Intelligence Dashboard
-Color scheme inspired by GeM portal: white background, navy #1B3A6B,
-teal #00A896, orange #FF6B35
-"""
-
 import streamlit as st
 import json
 import pandas as pd
@@ -372,16 +366,16 @@ TENDERS = {
     "Crash Bollard — GEM/2025/B/5902895":             {"path": "data/raw_tenders/bollard_1.pdf","category": "bollard","bid_number": "GEM/2025/B/5902895"},
 }
 
-# ── SIDEBAR ─────────────────────────────────────────────────────
+# ── SIDEBAR 
 with st.sidebar:
     st.markdown("""
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
       <div style="width:34px;height:34px;background:#00A896;border-radius:7px;
            display:flex;align-items:center;justify-content:center;font-size:17px;">🏛️</div>
       <div>
-        <div style="font-size:16px;font-weight:700;color:#FFFFFF;">GemEdge</div>
+        <div style="font-size:16px;font-weight:700;color:#FFFFFF;">GEM</div>
         <div style="font-size:9px;color:#5A7BAD;letter-spacing:0.1em;text-transform:uppercase;">
-          Procurement Intelligence</div>
+          Government e-Marketplace</div>
       </div>
     </div>
     """, unsafe_allow_html=True)
@@ -419,21 +413,21 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# ── TOP NAV BAR ──────────────────────────────────────────────────
+# ── TOP NAV BAR 
 st.markdown(f"""
 <div class="top-nav">
   <div class="top-nav-logo">
     <div class="top-nav-icon">🏛️</div>
     <div>
-      <div class="top-nav-brand">GemEdge</div>
-      <div class="top-nav-sub">Procurement Intelligence Platform</div>
+      <div class="top-nav-brand">GEM</div>
+      <div class="top-nav-sub">Government e-Marketplace</div>
     </div>
   </div>
   <div class="top-nav-right">Government e-Marketplace · Bid Analysis Engine</div>
 </div>
 """, unsafe_allow_html=True)
 
-# ── BREADCRUMB ───────────────────────────────────────────────────
+# ── BREADCRUMB 
 st.markdown(f"""
 <div class="breadcrumb-strip">
   <div class="breadcrumb-left">
@@ -443,10 +437,10 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── MAIN WRAP ───────────────────────────────────────────────────
+# ── MAIN WRAP 
 st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
 
-# ── HEADER CARD ─────────────────────────────────────────────────
+# ── HEADER CARD 
 msme_html = f'<span class="msme-pill">{vendor["msme_type"]}</span>' if vendor.get("msme_type") else ""
 st.markdown(f"""
 <div class="header-card">
@@ -468,7 +462,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── IDLE STATE ───────────────────────────────────────────────────
+# ── IDLE STATE 
 if not run_clicked:
     st.markdown("""
     <div class="idle-wrap">
@@ -484,12 +478,10 @@ if not run_clicked:
     """, unsafe_allow_html=True)
     st.stop()
 
-# ── 3 COLUMNS ───────────────────────────────────────────────────
+# ── 3 COLUMNS 
 col_b, col_c, col_d = st.columns(3, gap="medium")
 
-# ════════════════════════════════════════════════════════════════
 # COLUMN B — COMPLIANCE
-# ════════════════════════════════════════════════════════════════
 with col_b:
     st.markdown('<div class="col-card card-b">', unsafe_allow_html=True)
     st.markdown('<div class="card-header">Compliance Check</div>', unsafe_allow_html=True)
@@ -586,9 +578,7 @@ with col_b:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ════════════════════════════════════════════════════════════════
 # COLUMN C — PRICE PREDICTION
-# ════════════════════════════════════════════════════════════════
 with col_c:
     st.markdown('<div class="col-card card-c">', unsafe_allow_html=True)
     st.markdown('<div class="card-header">L1 Price Prediction</div>', unsafe_allow_html=True)
@@ -676,9 +666,7 @@ with col_c:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ════════════════════════════════════════════════════════════════
 # COLUMN D — WIN PROBABILITY
-# ════════════════════════════════════════════════════════════════
 with col_d:
     st.markdown('<div class="col-card card-d">', unsafe_allow_html=True)
     st.markdown('<div class="card-header">Win Probability</div>', unsafe_allow_html=True)

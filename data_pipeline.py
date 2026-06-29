@@ -118,7 +118,7 @@ def validate_historical_data(csv_path: str = "data/historical_awards.csv") -> di
     df = pd.read_csv(csv_path)
 
     required_columns = [
-        "contract_id", "product_name", "category",
+        "gem_ref_number", "product_name", "category",
         "l1_price", "num_bidders", "award_date"
     ]
     missing_cols = [c for c in required_columns if c not in df.columns]
