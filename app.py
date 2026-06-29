@@ -5,7 +5,6 @@ import numpy as np
 
 st.set_page_config(
     page_title="GemEdge Intelligence",
-    page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -417,7 +416,6 @@ with st.sidebar:
 st.markdown(f"""
 <div class="top-nav">
   <div class="top-nav-logo">
-    <div class="top-nav-icon">🏛️</div>
     <div>
       <div class="top-nav-brand">GEM</div>
       <div class="top-nav-sub">Government e-Marketplace</div>
@@ -466,7 +464,6 @@ st.markdown(f"""
 if not run_clicked:
     st.markdown("""
     <div class="idle-wrap">
-      <div style="font-size:44px;margin-bottom:14px;">🏛️</div>
       <div style="font-size:17px;font-weight:600;color:#1B3A6B;margin-bottom:8px;">
         Ready to Analyse
       </div>
