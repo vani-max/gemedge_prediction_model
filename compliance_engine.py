@@ -167,7 +167,8 @@ TENDER DOCUMENT:
     response = client.chat.completions.create(
         model="qwen/qwen3.8-27b",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0  # deterministic — same input always gives same output
+        temperature=0,  # deterministic — same input always gives same output
+        max_tokens=300  # explicitly limit output tokens to avoid 1000 OTPM tier limit
     )
     
     raw_output = response.choices[0].message.content
