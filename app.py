@@ -756,29 +756,7 @@ with col_d:
         </div>
         """, unsafe_allow_html=True)
 
-    # Sensitivity chart
-    st.markdown('<hr class="cdiv">', unsafe_allow_html=True)
-    st.markdown('<div class="card-header" style="margin-top:4px;">Bid Price Sensitivity</div>', unsafe_allow_html=True)
-    pr_range = np.linspace(predicted_l1 * 0.70, predicted_l1 * 1.40, 55)
-    curve = [
-        calculate_win_probability(
-            vendor_bid=float(p), predicted_l1=predicted_l1,
-            num_competitors=num_competitors,
-            is_msme=vendor["is_msme"], msme_type=vendor.get("msme_type"),
-            is_compliant=comp["is_compliant"]
-        )["win_probability"]
-        for p in pr_range
-    ]
-    cdf = pd.DataFrame({
-        "Bid Price (₹)": pr_range.astype(int),
-        "Win Probability (%)": curve
-    }).set_index("Bid Price (₹)")
-    st.line_chart(cdf, color="#00A896", height=150, use_container_width=True)
-    st.markdown(
-        '<div style="font-size:10px;color:#8BA3C7;text-align:center;margin-top:-6px;">'
-        'Strictly monotonically decreasing · verified by automated tests</div>',
-        unsafe_allow_html=True
-    )
+
 
     st.markdown('</div>', unsafe_allow_html=True)
 
