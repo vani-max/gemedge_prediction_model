@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 # SECTION 1: PDF TEXT EXTRACTION
 
+@st.cache_data(show_spinner=False)
 def extract_tender_text(pdf_path: str) -> str:
     """
     Reads a PDF page by page and returns all text as one string.
@@ -113,6 +114,7 @@ class TenderRequirements(BaseModel):
 
 # SECTION 3: LLM EXTRACTION
 
+@st.cache_data(show_spinner=False)
 def extract_requirements_with_llm(tender_text: str) -> str:
     """
     Sends tender text to Groq LLM and asks for structured JSON extraction.
